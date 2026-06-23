@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aegis Stock AI - Predictive Stock Analytics Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="glass-bg"></div>
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="main-header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="glow-svg">
+                        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                        <polyline points="16 7 22 7 22 13"></polyline>
+                    </svg>
+                </div>
+                <h1>Aegis <span class="accent-text">Stock AI</span></h1>
+                <span class="badge dev-mode">v2.0 Premium</span>
+            </div>
+            
+            <!-- Live Tickers Bar -->
+            <div class="tickers-marquee">
+                <div class="marquee-content" id="marquee-content">
+                    <!-- Dynamic ticker widgets will go here -->
+                </div>
+            </div>
+
+            <div class="system-status">
+                <span class="status-dot green"></span>
+                <span class="status-text">AI Pipeline Ready</span>
+            </div>
+        </header>
+
+        <!-- DASHBOARD BODY -->
+        <div class="dashboard-grid">
+            
+            <!-- SIDEBAR CONTROLS -->
+            <aside class="sidebar">
+                <div class="card control-card">
+                    <h2 class="card-title">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        Stock & AI Settings
+                    </h2>
+                    
+                    <div class="control-group">
+                        <label for="ticker-select">Select Asset Ticker</label>
+                        <div class="custom-select-wrapper">
+                            <select id="ticker-select">
+                                <option value="AAPL">AAPL - Apple Inc.</option>
+                                <option value="TSLA">TSLA - Tesla Inc.</option>
+                                <option value="NVDA">NVDA - NVIDIA Corp.</option>
+                                <option value="MSFT">MSFT - Microsoft Corp.</option>
+                                <option value="BTCUSD">BTC/USD - Bitcoin</option>
+                                <option value="CUSTOM">Custom Symbol...</option>
+                            </select>
+                        </div>
+                        <input type="text" id="custom-ticker-input" class="hidden-input" placeholder="Enter Ticker (e.g. AMZN)" maxlength="6">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="label-with-val">
+                            <label for="history-slider">Historical Data Range</label>
+                            <span class="value-display" id="history-val">200 days</span>
+                        </div>
+                        <input type="range" id="history-slider" min="100" max="500" value="200" step="10">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="label-with-val">
+                            <label for="horizon-slider">Forecast Horizon</label>
+                            <span class="value-display" id="horizon-val">15 days</span>
+                        </div>
+                        <input type="range" id="horizon-slider" min="5" max="30" value="15" step="1">
+                    </div>
+
+                    <hr class="separator">
+
+                    <h3 class="subsection-title">Model Hyperparameters</h3>
+
+                    <div class="control-group">
+                        <label for="model-type">AI Architecture</label>
+                        <select id="model-type">
+                            <option value="neural-net">Deep Feedforward Neural Network (ANN)</option>
+                            <option value="linear-reg" selected>Linear Regression (Supervised fit)</option>
+                            <option value="moving-average">Adaptive SMA / Momentum Engine</option>
+                        </select>
+                    </div>
+
+                    <div id="nn-params-wrapper">
+                        <div class="control-group">
+                            <div class="label-with-val">
+                                <label for="epochs-slider">Training Epochs</label>
+                                <span class="value-display" id="epochs-val">150</span>
+                            </div>
+                            <input type="range" id="epochs-slider" min="50" max="400" value="150" step="10">
+                        </div>
+
+                        <div class="control-group">
+                            <div class="label-with-val">
+                                <label for="lr-slider">Learning Rate</label>
+                                <span class="value-display" id="lr-val">0.05</span>
+                            </div>
+                            <input type="range" id="lr-slider" min="0.005" max="0.2" value="0.05" step="0.005">
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button id="btn-train" class="btn btn-primary">
+                            <svg class="icon-spin hidden" id="train-spinner" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>
+                            <span id="btn-train-text">Run AI Predictor</span>
+                        </button>
+                        <button id="btn-regenerate" class="btn btn-secondary">Regenerate Data</button>
+                    </div>
+                </div>
+
+                <!-- EVENT GENERATOR -->
+                <div class="card events-card">
+                    <h2 class="card-title">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        Market Event Injector
+                    </h2>
+                    <p class="card-desc">Simulate structural news events to test how the AI model instantly updates predictions.</p>
+                    <div class="events-grid">
+                        <button class="event-btn positive" data-event="earnings">🚀 Earnings Beat (+8%)</button>
+                        <button class="event-btn negative" data-event="regulatory">⚠️ Regulatory Probe (-12%)</button>
+                        <button class="event-btn positive" data-event="hype">🔥 CEO Hype Tweet (+5%)</button>
+                        <button class="event-btn negative" data-event="inflation">📉 Inflation Shock (-7%)</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- MAIN ANALYTICS VIEW -->
+            <main class="main-content">
+                <!-- METRIC GRID -->
+                <section class="metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-label">Current Value</span>
+                        <div class="metric-value-container">
+                            <span class="metric-val" id="metric-price">$0.00</span>
+                            <span class="metric-change positive" id="metric-change">+0.00%</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">AI Signal (Forecast Direction)</span>
+                        <div class="metric-value-container">
+                            <span class="metric-val signal-val text-neutral" id="metric-signal">Calculating</span>
+                            <span class="metric-badge" id="metric-signal-confidence">90% Conf</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Technical Status (RSI-14)</span>
+                        <div class="metric-value-container">
+                            <span class="metric-val" id="metric-rsi">50.0</span>
+                            <span class="metric-desc text-neutral" id="metric-rsi-desc">Neutral</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Model Test Accuracy (R²)</span>
+                        <div class="metric-value-container">
+                            <span class="metric-val" id="metric-accuracy">0.00%</span>
+                            <span class="metric-desc text-neutral" id="metric-error">MAE: $0.00</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- MAIN CHART CARD -->
+                <section class="card chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title-area">
+                            <h2 id="chart-main-title">Stock Price vs AI Forecast</h2>
+                            <span class="chart-subtitle">Historical values + N-day predictive projection window</span>
+                        </div>
+                        <div class="chart-legend-custom">
+                            <span class="legend-item"><span class="dot actual"></span>Actual Price</span>
+                            <span class="legend-item"><span class="dot test-fit"></span>Model Test Fit</span>
+                            <span class="legend-item"><span class="dot forecast"></span>Future Forecast</span>
+                        </div>
+                    </div>
+                    <div class="chart-canvas-container">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                </section>
+
+                <!-- BOTTOM STATS / CONSOLE GRID -->
+                <div class="bottom-grid">
+                    <!-- TRAINING RUNS & LOSS CHART -->
+                    <div class="card train-loss-card">
+                        <h2 class="card-title">
+                            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                            Live Loss/Convergence Optimization
+                        </h2>
+                        <div class="loss-chart-container">
+                            <canvas id="lossChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- AI LOGGING TERMINAL & SIMULATED NEWS -->
+                    <div class="card terminal-card">
+                        <div class="terminal-tabs">
+                            <button class="terminal-tab active" data-target="console-output">System Console</button>
+                            <button class="terminal-tab" data-target="news-output">Market News Wire</button>
+                        </div>
+                        <div class="terminal-content">
+                            <div id="console-output" class="terminal-pane active">
+                                <div class="terminal-line system">[SYSTEM] Aegis Stock AI v2.0 Pipeline active.</div>
+                                <div class="terminal-line system">[SYSTEM] Select a model and click "Run AI Predictor" to begin training.</div>
+                            </div>
+                            <div id="news-output" class="terminal-pane">
+                                <div class="terminal-line news-item"><span class="news-time">10:45 AM</span> - Federal Reserve Chairman hints at potential interest rate shifts in upcoming policy meeting.</div>
+                                <div class="terminal-line news-item"><span class="news-time">09:15 AM</span> - Market pre-opens with high volume in tech sector; analysts cite AI momentum.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- MAIN APP SCRIPT -->
+    <script src="app.js"></script>
+</body>
+</html>
