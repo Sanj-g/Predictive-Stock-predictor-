@@ -82,7 +82,7 @@ The Linear Regression model autoregressively predicts the next 10 trading days. 
 
 ---
 
-## 📊 Output Example
+##  Output Example
 --- Linear Regression Results ---
 
 Mean Absolute Error (MAE): $1.23
@@ -99,7 +99,7 @@ Date: 2024-07-02 | Predicted Close: $193.10
 ...
 ---
 
-## 📁 Project Structure
+##  Project Structure
 antigravity/
 
 ├── .venv/               # Python virtual environment
@@ -129,5 +129,4 @@ antigravity/
 
 ---
 
-##  License
 
